@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.3.3",
+    "@clerk/themes": "^2.1.21",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
+    "firebase": "^10.13.0",
     "i18next": "^23.14.0",
     "next": "14.2.5",
+    "next-auth": "^5.0.0-beta.20",
     "next-i18next": "^15.3.1",
     "openai": "^4.56.0",
     "react": "^18",

@@ -1,13 +1,25 @@
 "use client";
+// base imports
 import Image from "next/image";
 import { useState } from "react";
-import { Box, TextField, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Button, Modal, TextField, Grid, Autocomplete, Divider, AppBar, Toolbar, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
+import { firestore, auth, provider, signInWithPopup, signOut } from './firebase';
+import { collection, getDocs, query, doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
+// clerk
+import { useUser, redirectToSignIn, UserButton } from "@clerk/nextjs";
+// use googlesignin
+import { onAuthStateChanged } from 'firebase/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const { isSignedIn } = useUser(); // Clerk's useUser hook to check authentication state
+  const router = useRouter();
+
+
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -61,6 +73,9 @@ export default function Home() {
     
         
   };
+  const handleSignInClick = () => {
+    router.push("/sign-in"); // Navigate to sign-in page when the button is clicked
+  };
 
   return (
     <Box
@@ -68,16 +83,33 @@ export default function Home() {
       height="100vh"
       display="flex"
       flexDirection="column"
-      justifyContent="center"
+      justifyContent="flex-start"  // Align content to the top
       alignItems="center"
+      position="relative"
     >
+            {/* Sign In / User Button Positioned at the Top Left */}
+            <Box position="absolute" top={10} left={10}>
+        {!isSignedIn ? (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSignInClick}
+          >
+            Sign In
+          </Button>
+        ) : (
+          <UserButton />
+        )}
+      </Box>
+
       <Stack
-        direction="column"
-        width={{ xs: "100%", sm: "600px" }}
-        height={{ xs: "90vh", sm: "700px" }}
-        border="1px solid black"
-        p={2}
-        spacing={2}
+  direction="column"
+  width={{ xs: "100%", sm: "800px", md: "1000px" }} // Adjusted the width for larger screens
+  height={{ xs: "90vh", sm: "700px" }}
+  border="1px solid black"
+  p={2}
+  spacing={2}
+  mt={4}
       >
         <Stack
           direction="column"
@@ -162,7 +194,9 @@ export default function Home() {
             Send
           </Button>
         </Stack>
+        
       </Stack>
     </Box>
+    
   );
 }
