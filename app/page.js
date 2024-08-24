@@ -28,8 +28,13 @@ export default function Home() {
   ]);
 
   const [message, setMessage] = useState("");
+  const [questionCount, setQuestionCount] = useState(0);
 
   const sendMessage = async()=>{
+    if (questionCount >= 5) {
+      router.push("/sign-in"); // Navigate to sign-in page when the button is clicked
+      return;
+    }
     setMessage("");
     setMessages((messages) => [
       ...messages,
@@ -69,7 +74,7 @@ export default function Home() {
         return reader.read().then(processText);
       });
     })
-
+    setQuestionCount((prevCount) => prevCount + 1);
     
         
   };
